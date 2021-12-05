@@ -24,15 +24,27 @@ print(classNames)
 
 while True:
     ret, frame = videoCapture.read()
-    smallFrame = cv2.resize(frame, (0, 0), fx=0.5, fy=0.5)
+    smallFrame = frame # cv2.resize(frame, (0, 0), fx=1.0, fy=1.0)
 
-    classIDs, confidence, bbox = model.detect(smallFrame, confThreshold=0.5)
+    classIDs, confidence, bboxArray = model.detect(smallFrame, confThreshold=0.6, nmsThreshold=0.2)
 
-    for classID in classIDs:
-        if classID == 19:
-            cv2.putText(smallFrame, "Horse!", (200, 200), 1, 3.0, (244, 244, 244))
-        elif classID == 20:
-            cv2.putText(smallFrame, "Sheep!", (200, 200), 1, 3.0, (244, 244, 244))
+    # print("length classIDs: ", len(classIDs))
+    # print("length bbox: ", len(bbox))
+    # print(len(classIDs) == len(bbox))
+    for i, classID in enumerate(classIDs):
+        # p2 = (bbox[0], bbox[1])
+        # print(bbox)
+        bbox = bboxArray[i]
+        p1 = (bbox[0], bbox[1])
+        p2 = (bbox[2], bbox[3])
+        name = classNames[classID - 1]
+        cv2.rectangle(smallFrame, bbox, color=(255, 0, 0), thickness=2)
+        cv2.putText(smallFrame, name, p1, cv2.FONT_HERSHEY_COMPLEX, 1.0, (255, 255, 255), 2)
+        print("Confidence: " + name, confidence[i])
+        # if classID == 19:
+        #     cv2.putText(smallFrame, "Horse!", (200, 200), 1, 3.0, (244, 244, 244))
+        # elif classID == 20:
+        #     cv2.putText(smallFrame, "Sheep!", (200, 200), 1, 3.0, (244, 244, 244))
 
             # for box in bbox:
             #     p1 = (box[2], box[3])
