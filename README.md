@@ -1,6 +1,5 @@
 # PyThingRecognition
 Detect objects using OpenCV with its DNN functionality.
-This is a very cool project!
 
 ## Install
 ```
